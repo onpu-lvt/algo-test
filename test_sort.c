@@ -2,43 +2,12 @@
 #include <stdlib.h>
 #include <string.h> /* memset */
 #include <assert.h> /* assert */
-#include <limits.h> /* INT_MAX */
 #include <sys/time.h> /* gettimeofday */
 #include <sys/types.h>
-
-/* misc. */
-#define ARRAY_SIZE(a) ((sizeof (a)) / (sizeof (a)[0] ))
-#define STATIC_ASSERT(cond) do { switch (1) {case 0: case !!(cond): ;} } while (0)
-
-/* generic element type, use it in *all* collections */
-typedef int elem_t;
-
-/* the following type denotes the prototype of all sorting functions */
-typedef void (*sort_t)(elem_t *arr, size_t length);
-
-/* dummy time eater */
-static void eat(void)
-{
-	static volatile int eater; /*noopt*/
-	/* int eater; /\* try this with -O3 *\/ */
-	for (eater = 0; eater < INT_MAX/10; eater++)
-		;
-}
-
-/* algorithms, to be defined in tests */
-void merge_sort(elem_t *arr, size_t length)
-{
-	eat();
-	eat();
-}
-void quick_sort(elem_t *arr, size_t length)
-{
-	eat();
-}
-
-/**********************************************************************
- *                      TEST SYSTEM STARTS HERE...                    *
- **********************************************************************/
+#include "algo_common.h"
+#include "quick_sort.h"
+#include "merge_sort.h"
+/* include other sorts here */
 
 #define AVAIL_TEST_NR_MAX (10)
 
@@ -49,8 +18,10 @@ struct test_detail {
 
 struct test {
 	struct test_detail	st_test[AVAIL_TEST_NR_MAX];
-	size_t			st_start; /* start position of the test */
-	size_t			st_end;   /* end position of the test */
+	/* start position of the test */
+	size_t			st_start;
+	/* end position of the test */
+	size_t			st_end;
 };
 
 #define AVAIL_PROFILE_NR_MAX (5)
@@ -62,11 +33,14 @@ struct run_profile_detail {
 
 struct run_profile {
 	struct run_profile_detail	rp_profile[AVAIL_PROFILE_NR_MAX];
-	size_t				rp_start; /* start position of the test */
-	size_t				rp_end;   /* end position of the test */
+	/* start position of the test */
+	size_t				rp_start;
+	/* end position of the test */
+	size_t				rp_end;
 };
 
 /** 
+ * @TODO: define this function...
  * allocates an array of given @length with randomly set elements
  */
 int init_array(elem_t **out, size_t length)
@@ -75,7 +49,9 @@ int init_array(elem_t **out, size_t length)
 	return 0;
 }
 
-/* ... */
+/**
+ * @TODO: define this function...
+ */
 void fini_array(elem_t *out)
 {
 }
@@ -94,7 +70,9 @@ size_t checkpoint(void)
 	return 1000000*tv.tv_sec + tv.tv_usec;
 }
 
-/** Reports time and algorithm profile params
+/** 
+ * @TODO: define this function...
+ * Reports time and algorithm profile params
  */
 void report(size_t elapsed, struct run_profile_detail prf,
 	    struct test_detail tst)
@@ -115,7 +93,7 @@ void test(size_t profile_start, size_t profile_end,
 			[1] = {2, 3}, /* {100, 1000} */
 			[2] = {3, 2}, /* {1000, 100} */
 			[3] = {4, 1}, /* {10000, 10} */
-			[4] = {0, 0} /* end */
+			[4] = {0, 0}  /* end */
 		},
 		.rp_start = profile_start,
 		.rp_end   = profile_end
@@ -163,7 +141,6 @@ void test(size_t profile_start, size_t profile_end,
 	}
 }
 
-/* ... */
 int main(int argc, char **argv)
 {
 	printf("First one to init internals of libc\n");
