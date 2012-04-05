@@ -4,7 +4,6 @@
 
 void quick_sort(elem_t *arr, size_t length)
 {
-       eat();
-       eat();
+	eat();
 }
 

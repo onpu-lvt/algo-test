@@ -7,6 +7,8 @@
 #include "algo_common.h"
 #include "quick_sort.h"
 #include "merge_sort.h"
+#include "bubble_sort.h"
+
 /* include other sorts here */
 
 #define AVAIL_TEST_NR_MAX (10)
@@ -24,7 +26,7 @@ struct test {
 	size_t			st_end;
 };
 
-#define AVAIL_PROFILE_NR_MAX (5)
+#define AVAIL_PROFILE_NR_MAX (10)
 
 struct run_profile_detail {
 	size_t	pd_length;
@@ -45,7 +47,7 @@ struct run_profile {
  */
 int init_array(elem_t **out, size_t length)
 {
-	*out = (elem_t*)0xdeadbeaf;
+	*out = (elem_t*)malloc(sizeof(elem_t)*length);
 	return 0;
 }
 
@@ -54,6 +56,7 @@ int init_array(elem_t **out, size_t length)
  */
 void fini_array(elem_t *out)
 {
+	free(out);
 }
 
 /**
@@ -62,10 +65,9 @@ void fini_array(elem_t *out)
 size_t checkpoint(void)
 {
 	struct timeval  tv;
-	struct timezone tz;
 	int		rc;
  
-	rc = gettimeofday(&tv, &tz);
+	rc = gettimeofday(&tv, NULL);
 	assert(rc == 0); /* XXX: provide more correct solution */
 	return 1000000*tv.tv_sec + tv.tv_usec;
 }
@@ -77,8 +79,10 @@ size_t checkpoint(void)
 void report(size_t elapsed, struct run_profile_detail prf,
 	    struct test_detail tst)
 {
-	printf("test: %s, arr_len: %lu, test_times: %lu // elapsed time: %lu\n",
-	       tst.td_name, prf.pd_length, prf.pd_run_time, elapsed);
+	const size_t tm = prf.pd_run_time;
+	/* printf("test: %s, arr_len: %lu, test_times: %lu // elapsed time: %lu || avg time: %5.5f\n", */
+	/* 	 tst.td_name, prf.pd_length, tm, elapsed, ((float)elapsed)/tm); */
+	printf("%s:\t%lu\t%5.5f\n", tst.td_name, prf.pd_length, ((float)elapsed)/tm);
 }
 
 /**
@@ -89,11 +93,16 @@ void test(size_t profile_start, size_t profile_end,
 {
 	const struct run_profile prof = {
 		.rp_profile = {
-			[0] = {1, 4}, /* {10, 10000} */
-			[1] = {2, 3}, /* {100, 1000} */
-			[2] = {3, 2}, /* {1000, 100} */
-			[3] = {4, 1}, /* {10000, 10} */
-			[4] = {0, 0}  /* end */
+			[0] = {10, 10000},
+			[1] = {20, 10000},
+			[2] = {50, 10000},
+			[3] = {100, 1000},
+			[4] = {200, 1000},
+			[5] = {500, 1000},
+			[6] = {1000, 100},
+			[7] = {5000, 100},
+			[8] = {10000, 10},
+			[9] = {0, 0}  /* end */
 		},
 		.rp_start = profile_start,
 		.rp_end   = profile_end
@@ -102,7 +111,8 @@ void test(size_t profile_start, size_t profile_end,
 		.st_test = {
 			[0] = {merge_sort, "merge_sort"},
 			[1] = {quick_sort, "quick_sort"},
-			[2] = {NULL, NULL} /* end */
+			[2] = {bubble_sort, "bubble_sort"},
+			[3] = {NULL, NULL} /* end */
 		},
 		.st_start = test_start,
 		.st_end   = test_end
@@ -146,6 +156,6 @@ int main(int argc, char **argv)
 	printf("First one to init internals of libc\n");
 	checkpoint();
 
-	test(0, 4, 0, 2);
+	test(0, 9, 0, 3);
 	return 0;
 }

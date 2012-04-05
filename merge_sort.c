@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "merge_sort.h"
 
-void merge_sort(elem_t *arr, size_t length)
+void merge_sort(elem_t *b, size_t length)
 {
-       eat();
-       eat();
+	eat();
+	eat();
 }

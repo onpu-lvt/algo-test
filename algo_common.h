@@ -16,7 +16,7 @@ static inline void eat(void)
 {
 	static volatile int eater; /*noopt*/
 	/* int eater; /\* try this with -O3 *\/ */
-	for (eater = 0; eater < 1000000; eater++)
+	for (eater = 0; eater < 1000; eater++)
 		;
 }
 
