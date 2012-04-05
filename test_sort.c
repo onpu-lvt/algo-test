@@ -4,6 +4,7 @@
 #include <assert.h> /* assert */
 #include <sys/time.h> /* gettimeofday */
 #include <sys/types.h>
+#include <errno.h>
 #include "algo_common.h"
 #include "quick_sort.h"
 #include "merge_sort.h"
@@ -48,7 +49,7 @@ struct run_profile {
 int init_array(elem_t **out, size_t length)
 {
 	*out = (elem_t*)malloc(sizeof(elem_t)*length);
-	return 0;
+	return (*out == 0) ? -ENOMEM : 0;
 }
 
 /**
@@ -82,7 +83,7 @@ void report(size_t elapsed, struct run_profile_detail prf,
 	const size_t tm = prf.pd_run_time;
 	/* printf("test: %s, arr_len: %lu, test_times: %lu // elapsed time: %lu || avg time: %5.5f\n", */
 	/* 	 tst.td_name, prf.pd_length, tm, elapsed, ((float)elapsed)/tm); */
-	printf("%s:\t%lu\t%5.5f\n", tst.td_name, prf.pd_length, ((float)elapsed)/tm);
+	printf("%s:\tsize=%lu\ttime=%5.5f\n", tst.td_name, prf.pd_length, ((float)elapsed)/tm);
 }
 
 /**
@@ -117,7 +118,7 @@ void test(size_t profile_start, size_t profile_end,
 		.st_start = test_start,
 		.st_end   = test_end
 	};
-	size_t tst, prf, len, tim;
+	size_t tst, prf, len, tim, times;
 	size_t start_time, end_time;
 	elem_t *array;
 	sort_t func;
@@ -129,7 +130,9 @@ void test(size_t profile_start, size_t profile_end,
 	for (tst = rtst.st_start; tst < rtst.st_end; ++tst) {
 		for (prf = prof.rp_start; prf < prof.rp_end; ++prf) {
 			len = prof.rp_profile[prf].pd_length;
-			assert(len != 0);
+			times = prof.rp_profile[prf].pd_run_time;
+			assert(len != 0 && times != 0);
+
 			func = rtst.st_test[tst].td_func;
 			assert(func != NULL);
 
@@ -138,7 +141,7 @@ void test(size_t profile_start, size_t profile_end,
 
 			start_time = checkpoint();
 
-			for (tim = 0; tim < prof.rp_profile[prf].pd_run_time; ++tim) {
+			for (tim = 0; tim < times; ++tim) {
 				func(array, len);
 			}
 

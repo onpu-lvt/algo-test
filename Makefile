@@ -12,5 +12,6 @@ clean:
 	rm -rf *.dat
 
 bubble:
-	./a-test | grep bubble_sort | sed 's/bubble_sort://' > bubble_sort.dat
+	./a-test | grep bubble_sort | sed 's/bubble_sort://' | \
+	sed 's/size=//' | sed 's/time=//' > bubble_sort.dat
 	gnuplot bubble_sort.gp
