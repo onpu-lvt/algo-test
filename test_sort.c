@@ -27,7 +27,7 @@ struct test {
 	size_t			st_end;
 };
 
-#define AVAIL_PROFILE_NR_MAX (10)
+#define AVAIL_PROFILE_NR_MAX (20)
 
 struct run_profile_detail {
 	size_t	pd_length;
@@ -48,8 +48,14 @@ struct run_profile {
  */
 int init_array(elem_t **out, size_t length)
 {
+	size_t i;
 	*out = (elem_t*)malloc(sizeof(elem_t)*length);
-	return (*out == 0) ? -ENOMEM : 0;
+	if (*out == 0)
+		return -ENOMEM;
+	else
+		for (i = 0; i < length; ++i)
+			(*out)[i] = rand();
+	return 0;
 }
 
 /**
@@ -94,16 +100,22 @@ void test(size_t profile_start, size_t profile_end,
 {
 	const struct run_profile prof = {
 		.rp_profile = {
-			[0] = {10, 10000},
-			[1] = {20, 10000},
-			[2] = {50, 10000},
-			[3] = {100, 1000},
-			[4] = {200, 1000},
-			[5] = {500, 1000},
-			[6] = {1000, 100},
-			[7] = {5000, 100},
-			[8] = {10000, 10},
-			[9] = {0, 0}  /* end */
+			[0] =  {.pd_length = 10, .pd_run_time = 10000},
+			[1] =  {.pd_length = 20, .pd_run_time = 10000},
+			[2] =  {.pd_length = 50, .pd_run_time = 10000},
+			[3] =  {.pd_length = 100, .pd_run_time = 1000},
+			[4] =  {.pd_length = 200, .pd_run_time = 1000},
+			[5] =  {.pd_length = 500, .pd_run_time = 1000},
+			[6] =  {.pd_length = 1000, .pd_run_time = 100},
+			[7] =  {.pd_length = 5000, .pd_run_time = 100},
+			[8] =  {.pd_length = 10000, .pd_run_time = 10},
+			[9] =  {.pd_length = 15000, .pd_run_time = 5},
+			[10] = {.pd_length = 20000, .pd_run_time = 3},
+			[11] = {.pd_length = 50000, .pd_run_time = 2},
+			[12] = {.pd_length = 70000, .pd_run_time = 2},
+			[13] = {.pd_length = 80000, .pd_run_time = 2},
+			[14] = {.pd_length = 100000, .pd_run_time = 2},
+			[15] = {0, 0}  /* end */
 		},
 		.rp_start = profile_start,
 		.rp_end   = profile_end
@@ -156,9 +168,11 @@ void test(size_t profile_start, size_t profile_end,
 
 int main(int argc, char **argv)
 {
-	printf("First one to init internals of libc\n");
+	printf("init\n");
 	checkpoint();
+	srand(0xCAFEBABE);
 
-	test(0, 9, 0, 3);
+	printf("test\n");
+	test(0, 15, 2, 3);
 	return 0;
 }

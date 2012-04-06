@@ -1,5 +1,5 @@
 CC=gcc
-FLAGS=-g -std=c99 -Wall
+FLAGS=-O2 -std=c99 -Wall
 TGT=a-test
 
 all:
@@ -10,6 +10,7 @@ all:
 clean:
 	rm -rf $(TGT)
 	rm -rf *.dat
+	rm -rf *.png
 
 bubble:
 	./a-test | grep bubble_sort | sed 's/bubble_sort://' | \
