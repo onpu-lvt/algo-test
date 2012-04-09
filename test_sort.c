@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h> /* memset */
 #include <assert.h> /* assert */
 #include <sys/time.h> /* gettimeofday */
@@ -42,9 +43,8 @@ struct run_profile {
 	size_t				rp_end;
 };
 
-/** 
- * @TODO: define this function...
- * allocates an array of given @length with randomly set elements
+/**
+ * Allocates an array of given @length with randomly set elements
  */
 int init_array(elem_t **out, size_t length)
 {
@@ -59,11 +59,27 @@ int init_array(elem_t **out, size_t length)
 }
 
 /**
- * @TODO: define this function...
+ * Deallocates given array
  */
 void fini_array(elem_t *out)
 {
 	free(out);
+}
+
+
+/**
+ * Checks if an array of a given length is sorted in asscending order
+ * @return 0 if success, -1 if failure
+ */
+int check_sorted_array(elem_t *arr, size_t length)
+{
+	size_t i, j;
+
+	for (i = 0, j = 1; i < length-1; ++i, ++j)
+		if (arr[i] > arr[j])
+			return -1;
+
+	return 0;
 }
 
 /**
@@ -73,13 +89,13 @@ size_t checkpoint(void)
 {
 	struct timeval  tv;
 	int		rc;
- 
+
 	rc = gettimeofday(&tv, NULL);
 	assert(rc == 0); /* XXX: provide more correct solution */
 	return 1000000*tv.tv_sec + tv.tv_usec;
 }
 
-/** 
+/**
  * @TODO: define this function...
  * Reports time and algorithm profile params
  */
@@ -138,7 +154,7 @@ void test(size_t profile_start, size_t profile_end,
 
 	assert(prof.rp_start >= 0);
 	assert(rtst.st_start >= 0);
-	
+
 	for (tst = rtst.st_start; tst < rtst.st_end; ++tst) {
 		for (prf = prof.rp_start; prf < prof.rp_end; ++prf) {
 			len = prof.rp_profile[prf].pd_length;
@@ -158,6 +174,10 @@ void test(size_t profile_start, size_t profile_end,
 			}
 
 			end_time = checkpoint();
+
+			rc = check_sorted_array(array, len);
+			assert(rc == 0);
+
 			fini_array(array);
 			report(end_time - start_time,
 			       prof.rp_profile[prf],
