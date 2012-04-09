@@ -1,5 +1,5 @@
 CC=gcc
-FLAGS=-O2 -std=c99 -Wall
+FLAGS=-g -std=c99 -Wall
 TGT=a-test
 
 all:
@@ -37,4 +37,5 @@ cocktail:
 	sed 's/size=//' | sed 's/time=//' > cocktail_sort.dat
 	gnuplot cocktail_sort.gp
 
-
+test: bubble quick insert shell cocktail
+	echo "done"

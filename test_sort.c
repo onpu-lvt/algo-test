@@ -125,12 +125,11 @@ void test(size_t profile_start, size_t profile_end,
 	};
 	const struct test rtst = {
 		.st_test = {
-			//[0] = {merge_sort, "merge_sort"},
 			[0] = {shell_sort, "shell_sort"},
-			[1] = {quick_sort, "quick_sort"},
-			[2] = {bubble_sort, "bubble_sort"},
-			[3] = {cocktail_sort, "cocktail_sort"},
-			[4] = {insert_sort, "insert_sort"},
+			[1] = {bubble_sort, "bubble_sort"},
+			[2] = {cocktail_sort, "cocktail_sort"},
+			[3] = {insert_sort, "insert_sort"},
+			[4] = {quick_sort, "quick_sort"},
 			[5] = {NULL, NULL} /* end */
 		},
 		.st_start = test_start,
@@ -179,6 +178,6 @@ int main(int argc, char **argv)
 	srand(0xCAFEBABE);
 
 	printf("test\n");
-	test(0, 15, 0, 5);
+	test(0, 8, 4, 5);
 	return 0;
 }
