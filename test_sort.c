@@ -9,6 +9,9 @@
 #include "algo_common.h"
 #include "quick_sort.h"
 #include "merge_sort.h"
+#include "shell_sort.h"
+#include "insert_sort.h"
+#include "cocktail_sort.h"
 #include "bubble_sort.h"
 #include "radix_sort.h"
 
@@ -139,11 +142,13 @@ void test(size_t profile_start, size_t profile_end,
 	};
 	const struct test rtst = {
 		.st_test = {
-			[0] = {merge_sort, "merge_sort"},
-			[1] = {quick_sort, "quick_sort"},
+			[0] = {quick_sort, "quick_sort"},
+			[1] = {shell_sort, "shell_sort"},
 			[2] = {bubble_sort, "bubble_sort"},
-			[3] = {radix_sort, "radix_sort"},
-			[4] = {NULL, NULL} /* end */
+			[3] = {cocktail_sort, "cocktail_sort"},
+			[4] = {insert_sort, "insert_sort"},
+			[5] = {radix_sort, "radix_sort"},
+			[6] = {NULL, NULL} /* end */
 		},
 		.st_start = test_start,
 		.st_end   = test_end
@@ -195,6 +200,6 @@ int main(int argc, char **argv)
 	srand(0xCAFEBABE);
 
 	printf("test\n");
-	test(0, 15, 2, 4);
+	test(0, 15, 1, 6);
 	return 0;
 }
