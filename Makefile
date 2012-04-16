@@ -4,7 +4,7 @@ TGT=a-test
 
 all:
 	$(CC) $(FLAGS) \
-	merge_sort.c  quick_sort.c  test_sort.c bubble_sort.c \
+	bubble_sort.c merge_sort.c  quick_sort.c  test_sort.c radix_sort.c \
 	-o $(TGT)
 
 clean:
@@ -16,3 +16,8 @@ bubble:
 	./a-test | grep bubble_sort | sed 's/bubble_sort://' | \
 	sed 's/size=//' | sed 's/time=//' > bubble_sort.dat
 	gnuplot bubble_sort.gp
+
+radix:
+	./a-test | grep radix_sort | sed 's/radix_sort://' | \
+	sed 's/size=//' | sed 's/time=//' > radix_sort.dat
+	gnuplot radix_sort.gp

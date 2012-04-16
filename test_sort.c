@@ -10,6 +10,7 @@
 #include "quick_sort.h"
 #include "merge_sort.h"
 #include "bubble_sort.h"
+#include "radix_sort.h"
 
 /* include other sorts here */
 
@@ -141,7 +142,8 @@ void test(size_t profile_start, size_t profile_end,
 			[0] = {merge_sort, "merge_sort"},
 			[1] = {quick_sort, "quick_sort"},
 			[2] = {bubble_sort, "bubble_sort"},
-			[3] = {NULL, NULL} /* end */
+			[3] = {radix_sort, "radix_sort"},
+			[4] = {NULL, NULL} /* end */
 		},
 		.st_start = test_start,
 		.st_end   = test_end
@@ -193,6 +195,6 @@ int main(int argc, char **argv)
 	srand(0xCAFEBABE);
 
 	printf("test\n");
-	test(0, 15, 2, 3);
+	test(0, 15, 2, 4);
 	return 0;
 }
