@@ -148,7 +148,8 @@ void test(size_t profile_start, size_t profile_end,
 			[3] = {cocktail_sort, "cocktail_sort"},
 			[4] = {insert_sort, "insert_sort"},
 			[5] = {radix_sort, "radix_sort"},
-			[6] = {NULL, NULL} /* end */
+			[6] = {merge_sort, "merge_sort"},
+			[7] = {NULL, NULL} /* end */
 		},
 		.st_start = test_start,
 		.st_end   = test_end
@@ -183,7 +184,7 @@ void test(size_t profile_start, size_t profile_end,
 			end_time = checkpoint();
 
 			rc = check_sorted_array(array, len);
-			assert(rc == 0);
+			assert("check_sorted_array() failed!!!" && rc == 0);
 
 			fini_array(array);
 			report(end_time - start_time,
@@ -200,6 +201,6 @@ int main(int argc, char **argv)
 	srand(0xCAFEBABE);
 
 	printf("test\n");
-	test(0, 15, 1, 6);
+	test(0, 15, 6, 7);
 	return 0;
 }
